@@ -1,11 +1,9 @@
-import React from "react";
-import { get } from "../../services/request";
+import React, { useEffect, useState } from "react";
+import { useNumbersQuestions } from "../../contexts/NumberQuestions";
 import './styles.css'
 
 export function QuestionSelector() {
-  const response = get(3);
-
-  console.log(response);
+  const { setNumberQuestions } = useNumbersQuestions();
   
   return (
     <div className="container-selector">
@@ -13,8 +11,7 @@ export function QuestionSelector() {
       <p>
         Selecione a baixo a quantidade de perguntas você gostaria de reponder
       </p>
-
-      <input className="quantity-number" type="number" />
+      <input className="quantity-number" type="number" onChange={e => setNumberQuestions(e.target.value)}/>
     </div>
   );
 }
