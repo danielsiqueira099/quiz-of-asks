@@ -1,12 +1,17 @@
-import React from 'react';
-import { Buttons } from '../components/Buttons';
-import { QuestionSelector } from '../components/QuestionSelector';
+import React, { useState } from "react";
+import { Buttons } from "../components/Buttons";
+import { QuestionSelector } from "../components/QuestionSelector";
 
 function Home() {
+  const [renderButtons, setRenderButtons] = useState(false);
+
   return (
     <>
-      <QuestionSelector />
-      <Buttons />
+      {renderButtons === true ? (
+        <Buttons setRenderButtons={setRenderButtons}/>
+      ) : (
+        <QuestionSelector setRenderButtons={setRenderButtons} />
+      )}
     </>
   );
 }
