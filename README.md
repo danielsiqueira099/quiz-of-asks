@@ -2,7 +2,6 @@
 
 Tecnologias utilizazadas no projeto:
 
-- [MongoDB](https://www.mongodb.com/cloud/atlas)
 - [ReactJS](https://pt-br.reactjs.org/)
 - [Material UI](https://material-ui.com/pt/)
 - [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
