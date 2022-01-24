@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
+import React from "react";
+import { Form, Formik } from "formik";
 
 import { useQuestionsResponse } from "../contexts/QuestionsResponse";
+import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 
 function Quiz() {
   const { questionsResponse } = useQuestionsResponse();
+  const navigate = useNavigate();
 
-  const onSubmit = (value) => {
-    //04 - O usuário deve escolher uma resposta 
-    // a cada resposta deve contabilizar quantidade de acertos e erros.
-
-    // - ter um array de objetos, que armazenará a resposta se for correta ou errada e a pergunta da questão.
-
-    console.log(value)
-
+  const handleSubmit = (value) => {
     const questions = Object.keys(value);
     const storeAnswer = [];
     let respCorreta = 0;
@@ -21,59 +23,85 @@ function Quiz() {
 
     questions.forEach((question) => {
       questionsResponse.forEach((res) => {
-        // console.log("__________________________________________")
-        // console.log("comparação",res.correct_answer ) // respota correta
-        // console.log("questão", question) // questão apresentada
-        // console.log("testeee", value[question]) // resposta escolhida pelo usuario
-
         if (res.question === question) {
           const verificandoResp = value[question] === res.correct_answer;
-          
-          verificandoResp === true ? respCorreta += 1 : respIncorreta += 1
 
-          console.log("respCorreta", respCorreta);
-          console.log("respIncorreta", respIncorreta);
-
+          // adição de respostas certas e erradas
+          verificandoResp === true ? (respCorreta += 1) : (respIncorreta += 1);
 
           storeAnswer.push({
             pergunta: question,
             respostaVerificada: verificandoResp,
             respostaDoUsuario: value[question],
-            repostaCorreta: res.correct_answer
+            repostaCorreta: res.correct_answer,
           });
         }
       });
     });
+
+    localStorage.setItem(
+      "storeAnswer",
+      JSON.stringify({
+        storeAnswer,
+        quntdRespCorreta: respCorreta,
+        quntdRespIncorreta: respIncorreta,
+      })
+    );
+
+    navigate("/report");
   };
 
   return (
     <div>
-      <Formik initialValues={{}} onSubmit={(values) => onSubmit(values)}>
+      <Formik initialValues={{}} onSubmit={(values) => handleSubmit(values)}>
         {({ handleSubmit, handleChange }) => (
-          <form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             {questionsResponse.map((item) => {
               return (
-                <div key={item.question}>
-                  <p>{item.question}</p>
-                  {item.answers.map((res) => {
-                    return (
-                      <div key={res}>
-                        <input
-                          type="radio"
-                          id={res}
-                          name={item.question}
-                          value={res}
-                          onChange={handleChange}
-                        />
-                        <label htmlFor={res}>{res}</label>
-                      </div>
-                    );
-                  })}
+                <div
+                  key={item.question}
+                  style={{ margin: "20px", borderBottom: "1px solid" }}
+                >
+                  <Typography variant={"h5"}>
+                    {item.question
+                      .replace(/&quot;/g, '"')
+                      .replace(/&#039;/g, '"')}
+                  </Typography>
+                  <RadioGroup>
+                    {item.answers.map((res) => {
+                      return (
+                        <div key={res}>
+                          <FormControlLabel
+                            value={res}
+                            onChange={handleChange}
+                            control={
+                              <Radio
+                                sx={{
+                                  "& .MuiSvgIcon-root": {
+                                    fontSize: 22,
+                                  },
+                                }}
+                              />
+                            }
+                            name={item.question}
+                            label={res}
+                          />
+                        </div>
+                      );
+                    })}
+                  </RadioGroup>
                 </div>
               );
             })}
-            <button type="submit">Salvarr</button>
-          </form>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              style={{ margin: "30px 0 0 20px" }}
+            >
+              Finalizar quiz
+            </Button>
+          </Form>
         )}
       </Formik>
     </div>

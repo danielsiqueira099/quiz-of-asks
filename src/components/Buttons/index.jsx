@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 import useApi from "../../services/useApi";
 
@@ -10,10 +10,12 @@ import { shuffleArray } from "../../utils/shuffleArray";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
+
 import "./styles.css";
 
 export function Buttons(props) {
-  const { setRenderButtons } = props
+  const { setRenderButtons } = props;
   const { numberQuestions } = useNumbersQuestions();
   const { setQuestionsResponse } = useQuestionsResponse();
   const { get } = useApi();
@@ -37,22 +39,31 @@ export function Buttons(props) {
 
   const handleSubmitButtonCancel = () => {
     setRenderButtons(false);
-  }
+  };
 
   return (
-    <div className="container-buttons">
-      <Stack spacing={2} className="stack">
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => getQuestionNumber()}
-        >
-          Start
-        </Button>
-        <Button variant="outlined" color="error" onClick={handleSubmitButtonCancel}>
-          Cancel
-        </Button>
-      </Stack>
+    <div className="container">
+      <Typography variant={"h4"} className="information-numbers">
+        Deseja responder o questionário com {numberQuestions} perguntas?
+      </Typography>
+      <div className="container-buttons">
+        <Stack spacing={2}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => getQuestionNumber()}
+          >
+            Start
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleSubmitButtonCancel}
+          >
+            Cancel
+          </Button>
+        </Stack>
+      </div>
     </div>
   );
 }
